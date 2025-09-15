@@ -1,31 +1,35 @@
 function love.load()
 	player = {}
-	velocity = 2
 	player.x = 400 
 	player.y = 200
-	x, y, w,h = 0, 0, 60, 20
+	player.speed = 2
+	love.mouse.setVisible(false)
+	player.sprite = love.graphics.newImage("asserts/parrot.png")
+	background = love.graphics.newImage("asserts/background.png")
+	enemy = love.graphics.newImage("asserts/bird.png")
+--	img = love.graphics.newImage("mouse.png")
 end
 
 function love.update(dt)
-	w = w+20
-	h = h+20
+	cursor = love.mouse.getCursor()
 	if love.keyboard.isDown("s") then
-		player.y = player.y + velocity
+		player.y = player.y + player.speed
 	end
 	if love.keyboard.isDown("w") then
-		player.y = player.y - velocity
+		player.y = player.y - player.speed
 	end
 	if love.keyboard.isDown("d") then
-		player.x = player.x + velocity
+		player.x = player.x + player.speed
 	end
 	if love.keyboard.isDown("a") then
-		player.x = player.x - velocity
+		player.x = player.x - player.speed
 	end
 end
 
 function love.draw()
-	love.graphics.setColor(0, 100, 100)
-	love.graphics.rectangle("fill", x, y, w, h)
-	love.graphics.setColor(100, 0, 0)
-	love.graphics.circle("fill", player.x, player.y, 10)
+	love.graphics.draw(background, 0, 0)
+	love.graphics.draw(player.sprite, player.x, player.y)
+	local x, y = love.mouse.getPosition()
+	love.graphics.rectangle("fill", x, y, 10, 10)
+--	love.graphics.draw(img, x,y)
 end
