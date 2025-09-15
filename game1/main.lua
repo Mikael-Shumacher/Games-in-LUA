@@ -27,5 +27,5 @@ function love.draw()
 	love.graphics.setColor(0, 100, 100)
 	love.graphics.rectangle("fill", x, y, w, h)
 	love.graphics.setColor(100, 0, 0)
-	love.graphics.circle("fill", player.x, player.y, 100)
+	love.graphics.circle("fill", player.x, player.y, 10)
 end
