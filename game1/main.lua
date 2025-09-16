@@ -2,15 +2,16 @@ function love.load()
 	anim8 = require 'libraries/anim8'
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
+	sti = require 'libraries/sti'
+	gameMap = sti('maps/Map.lua')
+
 	player = {}
 	player.x = 400 
 	player.y = 200
 	player.speed = 2
 	love.mouse.setVisible(false)
-	player.sprite = love.graphics.newImage("asserts/parrot.png")
-	background = love.graphics.newImage("asserts/background.png")
-	enemy = love.graphics.newImage("asserts/bird.png")
-	player.spriteSheet = love.graphics.newImage("asserts/player-sheet.png")
+	background = love.graphics.newImage("assets/background.png")
+	player.spriteSheet = love.graphics.newImage("assets/player-sheet.png")
 	player.grid = anim8.newGrid(12, 18, player.spriteSheet:getWidth(), player.spriteSheet:getHeight())
 	player.animations = {}
 	player.animations.down = anim8.newAnimation(player.grid('1-4', 1), 0.2)
@@ -30,21 +31,28 @@ function love.update(dt)
 	if love.keyboard.isDown("s") then
 		player.y = player.y + player.speed
 		player.anim = player.animations.down
+		isMoving = true
 	elseif love.keyboard.isDown("w") then
 		player.y = player.y - player.speed
 		player.anim = player.animations.up
+		isMoving = true
 	elseif love.keyboard.isDown("d") then
 		player.x = player.x + player.speed
 		player.anim = player.animations.right
+		isMoving = true
 	elseif love.keyboard.isDown("a") then
 		player.x = player.x - player.speed
 		player.anim = player.animations.left
+		isMoving = true
 	else 
 		-- stop
 		player.anim:gotoFrame(2)
+		isMoving = false
 	end
 	if love.keyboard.isDown("lshift") then
 		player.speed = 4
+	else 
+		player.speed = 2
 	end
 
 
@@ -52,7 +60,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	love.graphics.draw(background, 0, 0)
+	gameMap:draw()
 	local x, y = love.mouse.getPosition()
 	love.graphics.rectangle("fill", x, y, 10, 10)
 	player.anim:draw(player.spriteSheet, player.x, player.y, nil, 3)
