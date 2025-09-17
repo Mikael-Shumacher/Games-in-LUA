@@ -5,6 +5,9 @@ function love.load()
 	sti = require 'libraries/sti'
 	gameMap = sti('maps/Map.lua')
 
+	camera = require 'libraries/camera'
+	cam = camera()
+
 	player = {}
 	player.x = 400 
 	player.y = 200
@@ -57,12 +60,30 @@ function love.update(dt)
 
 
 	player.anim:update(dt)
+	cam:lookAt(player.x, player.y)
+
+	local w = love.graphics.getWidth()
+	local h = love.graphics.getHeight()
+
+	local mapW = gameMap.width * gameMap.tilewidth
+	local mapH = gameMap.height * gameMap.tileheight
+	if cam.x > (mapW - w/2) then
+		cam.x = (mapW - w/2)
+	end
+
+	if cam.y > (mapH - h/2) then
+		cam.y = (mapH - h/2)
+	end
+
 end
 
 function love.draw()
-	gameMap:draw()
-	local x, y = love.mouse.getPosition()
-	love.graphics.rectangle("fill", x, y, 10, 10)
-	player.anim:draw(player.spriteSheet, player.x, player.y, nil, 3)
---	love.graphics.draw(img, x,y)
+	cam:attach()
+		gameMap:drawLayer(gameMap.layers["Ground"])
+		gameMap:drawLayer(gameMap.layers["Tree"])
+		local x, y = love.mouse.getPosition()
+		love.graphics.rectangle("fill", x, y, 10, 10)
+		player.anim:draw(player.spriteSheet, player.x, player.y, nil, 4, nil, 6, 9)
+	--	love.graphics.draw(img, x,y)
+	cam:detach()
 end
